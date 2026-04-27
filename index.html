@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Flag Master: World Tour</title>
+    <meta name="description" content="Eğlenceli ve öğretici dünya bayrakları tahmin oyunu. Ülkeleri keşfet, altın kazan ve dünya turuna çık!">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <div id="login-screen" class="screen">
+            <div class="glass-card login-card">
+                <h1>F L A G <br> M A S T E R</h1>
+                <p data-i18n="Hoşgeldin Kaptan! Adın nedir?">Hoşgeldin Kaptan! Adın nedir?</p>
+                <div class="typing-container">
+                    <input type="text" id="login-username" placeholder="Kullanıcı Adı" maxlength="15">
+                    <button class="btn-primary" id="btn-login" data-i18n="OYUNA GİR">OYUNA GİR</button>
+                </div>
+                <p id="login-status" class="status-msg"></p>
+            </div>
+        </div>
+
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="screen active">
+            <div class="loader-content">
+                <div class="flag-icon-anim">🌍</div>
+                <h1>FLAG MASTER</h1>
+                <p>Dünya Turu Başlıyor...</p>
+                <div class="progress-bar-container">
+                    <div id="loading-progress" class="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Menu -->
+        <div id="main-menu" class="screen">
+            <div class="menu-header">
+                <div class="logo">
+                    <span class="emoji">🚩</span>
+                    <h1>FLAG MASTER</h1>
+                    <span class="subtitle" id="user-welcome">WORLD TOUR</span>
+                </div>
+            </div>
+            
+            <div class="menu-content">
+                <button class="btn-primary" id="btn-start" data-i18n="OYNA">OYNA</button>
+                <div class="game-modes-grid">
+                    <button class="mode-card" data-mode="classic">
+                        <span class="icon">🏆</span>
+                        <span class="label" data-i18n="Klasik">Klasik</span>
+                    </button>
+                    <button class="mode-card" data-mode="timed">
+                        <span class="icon">⏱️</span>
+                        <span class="label" data-i18n="Zamanlı">Zamanlı</span>
+                    </button>
+                    <button class="mode-card" data-mode="hard">
+                        <span class="icon">🔥</span>
+                        <span class="label" data-i18n="Zor">Zor</span>
+                    </button>
+                    <button class="mode-card" data-mode="typing">
+                        <span class="icon">⌨️</span>
+                        <span class="label" data-i18n="Yazma">Yazma</span>
+                    </button>
+                </div>
+                <button class="btn-secondary" id="btn-world-tour" data-i18n="DÜNYA TURU">DÜNYA TURU</button>
+            </div>
+
+            <div class="menu-footer">
+                <button class="icon-btn" id="btn-settings">⚙️</button>
+                <button class="icon-btn" id="btn-leaderboard">📊</button>
+                <button class="icon-btn" id="btn-achievements">🏅</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <span class="icon">❤️</span>
+                        <span id="lives-count">5</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="icon">💰</span>
+                        <span id="gold-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="icon">🎯</span>
+                        <span id="score-count">0</span>
+                    </div>
+                    <div class="stat-item opponent">
+                        <span class="icon">👤</span>
+                        <span id="opponent-score">0</span>
+                    </div>
+                </div>
+                <div class="level-indicator">
+                    SEVİYE <span id="current-level">1</span>
+                </div>
+                <div id="game-timer-container" class="timer-container">
+                    <div id="game-timer" class="timer-bar"></div>
+                </div>
+            </div>
+
+            <div class="game-content">
+                <div id="flag-container" class="flag-container">
+                    <img id="current-flag" src="" alt="Bayrak">
+                </div>
+
+                <div id="options-container" class="options-grid">
+                    <!-- Options will be generated here -->
+                </div>
+
+                <div id="typing-input-container" class="typing-container hidden">
+                    <input type="text" id="country-input" placeholder="Ülke adını yazın..." autocomplete="off">
+                    <button id="btn-submit-typing">GÖNDER</button>
+                </div>
+            </div>
+
+            <div class="game-footer">
+                <div class="hints-container">
+                    <button class="hint-btn" id="hint-50-50" title="2 Yanlışı Sil">
+                        <span class="icon">✂️</span>
+                        <span class="cost">50</span>
+                    </button>
+                    <button class="hint-btn" id="hint-letter" title="İlk Harf">
+                        <span class="icon">🔤</span>
+                        <span class="cost">30</span>
+                    </button>
+                    <button class="hint-btn" id="hint-capital" title="Başkent">
+                        <span class="icon">🏛️</span>
+                        <span class="cost">40</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- World Tour Screen -->
+        <div id="world-tour-screen" class="screen">
+            <div class="game-header">
+                <button class="icon-btn" id="btn-back-tour">⬅️</button>
+                <h1>DÜNYA TURU</h1>
+            </div>
+            <div class="map-container">
+                <!-- Visual Map Progress -->
+                <div class="region-card" data-region="Europe">
+                    <span class="region-name">Avrupa</span>
+                    <div class="region-progress"><div class="bar" style="width: 0%"></div></div>
+                    <button class="btn-play-region">KEŞFET</button>
+                </div>
+                <div class="region-card" data-region="Asia">
+                    <span class="region-name">Asya</span>
+                    <div class="region-progress"><div class="bar" style="width: 0%"></div></div>
+                    <button class="btn-play-region" disabled>KİLİTLİ</button>
+                </div>
+                <div class="region-card" data-region="Americas">
+                    <span class="region-name">Amerika</span>
+                    <div class="region-progress"><div class="bar" style="width: 0%"></div></div>
+                    <button class="btn-play-region" disabled>KİLİTLİ</button>
+                </div>
+                <div class="region-card" data-region="Africa">
+                    <span class="region-name">Afrika</span>
+                    <div class="region-progress"><div class="bar" style="width: 0%"></div></div>
+                    <button class="btn-play-region" disabled>KİLİTLİ</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="overlay-container" class="overlay hidden"></div>
+
+        <!-- Settings Modal (Internal Template) -->
+        <template id="tpl-settings">
+            <div class="modal">
+                <h2>AYARLAR</h2>
+                <div class="setting-item">
+                    <span data-i18n="Sound">Ses</span>
+                    <button class="toggle-btn" id="toggle-sound">AÇIK</button>
+                </div>
+                <div class="setting-item">
+                    <span data-i18n="Language">Dil</span>
+                    <button class="toggle-btn" id="toggle-lang">TÜRKÇE</button>
+                </div>
+                <button class="btn-primary" id="btn-close-settings">KAPAT</button>
+            </div>
+        </template>
+
+        <!-- Leaderboard Modal (Internal Template) -->
+        <template id="tpl-leaderboard">
+            <div class="modal">
+                <h2>LİDERLİK TABLOSU</h2>
+                <div class="leaderboard-list" id="leaderboard-list">
+                    <!-- Fake scores -->
+                </div>
+                <button class="btn-primary" id="btn-close-leaderboard">KAPAT</button>
+            </div>
+        </template>
+    </div>
+
+    <!-- Background Music (Dummy for now) -->
+    <audio id="bg-music" loop></audio>
+
+    <!-- Scripts -->
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>
