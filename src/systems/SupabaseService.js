@@ -57,6 +57,28 @@ class SupabaseService {
         return { data, error };
     }
 
+    async isUsernameAvailable(username) {
+        if (!this.client) return true;
+        const { data, error } = await this.client
+            .from('profiles')
+            .select('username')
+            .eq('username', username)
+            .maybeSingle();
+        
+        if (error) return true;
+        return !data; // Veri yoksa kullanılabilir demektir
+    }
+
+    suggestUsernames(base) {
+        const suffixes = ['123', 'TR', '_01', 'Pro', 'Master', Math.floor(Math.random() * 999)];
+        const suggestions = [];
+        for (let i = 0; i < 3; i++) {
+            const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+            suggestions.push(`${base}${suffix}`);
+        }
+        return suggestions;
+    }
+
     async getTopScores(limit = 10) {
         if (!this.client) return this.getFakeScores();
 
