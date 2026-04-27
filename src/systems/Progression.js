@@ -8,6 +8,7 @@ class Progression {
         };
         this.badges = [];
         this.playerName = null;
+        this.adsWatchedInGame = 0;
     }
 
     reset() {
@@ -19,6 +20,7 @@ class Progression {
         this.combo = 0;
         this.correctCount = 0;
         this.isPerfectRound = true;
+        this.adsWatchedInGame = 0;
     }
 
     addScore(amount, speedBonus = 1) {
@@ -74,6 +76,14 @@ class Progression {
             return "No Mistakes Round";
         }
         return null;
+    }
+
+    canWatchAd() {
+        return this.adsWatchedInGame < 3;
+    }
+
+    incrementAdsWatched() {
+        this.adsWatchedInGame++;
     }
 
     save() {

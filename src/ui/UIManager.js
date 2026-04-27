@@ -439,15 +439,17 @@ class UIManager {
 
             const btnAd = document.getElementById('btn-ad-life');
             if (btnAd) {
+                const canWatch = progression.canWatchAd();
+                btnAd.disabled = !canWatch;
+                if (!canWatch) {
+                    btnAd.textContent = '🚫 Bu Oyunluk Reklam Bitti';
+                    btnAd.style.opacity = '0.5';
+                } else {
+                    btnAd.textContent = `📺 +1 Can (Bu Oyun İçin Kalan: ${3 - progression.adsWatchedInGame})`;
+                }
+
                 btnAd.onclick = () => {
-                    alert(localization.translate('Watching Ad...'));
-                    setTimeout(() => {
-                        progression.lives += 1;
-                        game.isGameOver = false;
-                        this.overlay.classList.add('hidden');
-                        this.updateHUD();
-                        game.startTimeTask();
-                    }, 2000);
+                    this.handleWatchAd(btnAd);
                 };
             }
 
@@ -456,6 +458,24 @@ class UIManager {
             // Emergency fallback
             this.overlay.innerHTML = '<div class="modal"><h2>Hata Oluştu</h2><button class="btn-primary" onclick="location.reload()">Sayfayı Yenile</button></div>';
         }
+    }
+
+    handleWatchAd(btn) {
+        btn.disabled = true;
+        btn.textContent = '📡 Reklam Yükleniyor...';
+
+        // BURASI: Gerçek Google AdSense/AdMob kodu buraya gelecek
+        // adsbygoogle.push({}) gibi...
+        
+        setTimeout(() => {
+            alert(localization.translate('Extra Life Earned!'));
+            progression.lives += 1;
+            progression.incrementAdsWatched();
+            game.isGameOver = false;
+            this.overlay.classList.add('hidden');
+            this.updateHUD();
+            game.startTimeTask();
+        }, 2500); // 2.5 saniyelik simülasyon
     }
 
     useHint(type) {
