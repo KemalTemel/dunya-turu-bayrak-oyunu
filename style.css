@@ -418,16 +418,16 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 0; /* Gap handles spacing now */
+    margin-bottom: 0;
     box-shadow: var(--shadow);
-    flex: 1 1 140px; /* Grow and shrink proportionally */
-    min-height: 100px;
-    max-height: 180px;
+    flex: 1 1 30vh; /* Grow proportionally with screen height */
+    min-height: 120px;
+    max-height: 35vh; /* Allow much more vertical growth */
 }
 
 #current-flag {
     max-width: 100%;
-    max-height: 100%;
+    max-height: 30vh; /* Fill the container better */
     object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -436,8 +436,8 @@ body {
 .options-grid {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    flex: 2 1 200px;
+    gap: 2vh; /* Dynamic gap based on height */
+    flex: 2 1 40vh;
 }
 
 .option-btn {
@@ -446,7 +446,7 @@ body {
     color: #ffffff;
     padding: 0 10px;
     border-radius: 12px;
-    font-size: 1.1rem;
+    font-size: clamp(1.1rem, 2.5vh, 1.5rem); /* Text grows if button grows */
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -454,9 +454,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex: 1;
-    min-height: 45px;
-    max-height: 70px;
+    flex: 1; /* Stretch vertically */
+    min-height: 50px;
+    max-height: 15vh; /* Allow buttons to get much taller to fill space */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
     letter-spacing: 0.5px;
