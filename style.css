@@ -404,10 +404,10 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* Aligns content to top, removing useless gap */
     min-height: 0;
     overflow-y: auto;
-    padding: 2px 0;
+    padding: 15px 0 2px 0; /* Add top padding to separate from timer */
 }
 
 .flag-container {
