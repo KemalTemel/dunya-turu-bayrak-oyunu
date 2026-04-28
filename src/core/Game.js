@@ -85,12 +85,15 @@ class Game {
                 similar = countries.filter(c => target.similarCodes.includes(c.code));
             }
             const sameRegion = pool.filter(c => c.region === target.region);
-            pool = [...similar, ...sameRegion, ...pool];
+            pool = Array.from(new Set([...similar, ...sameRegion, ...pool]));
         }
 
         while (options.length < 4) {
             const index = Math.floor(Math.random() * pool.length);
-            options.push(pool[index]);
+            const selected = pool[index];
+            if (!options.find(o => o.code === selected.code)) {
+                options.push(selected);
+            }
             pool.splice(index, 1);
         }
 
