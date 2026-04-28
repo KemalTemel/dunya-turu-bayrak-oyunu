@@ -335,18 +335,29 @@ body {
 }
 
 .option-btn {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    color: white;
+    background: rgba(10, 25, 15, 0.85);
+    border: 2px solid rgba(46, 204, 113, 0.3);
+    color: #ffffff;
     padding: 16px;
     border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 1.25rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
-    text-align: left;
+    transition: all 0.2s ease;
+    text-align: center;
     display: flex;
+    justify-content: center;
     align-items: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    letter-spacing: 0.5px;
+}
+
+.option-btn:hover {
+    background: rgba(46, 204, 113, 0.15);
+    border-color: rgba(46, 204, 113, 0.8);
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+    transform: translateY(-2px);
 }
 
 .option-btn:active {
@@ -356,11 +367,15 @@ body {
 .option-btn.correct {
     background: var(--success);
     border-color: var(--success);
+    color: #000000;
+    text-shadow: none;
+    font-weight: 800;
 }
 
 .option-btn.wrong {
     background: var(--danger);
     border-color: var(--danger);
+    color: #ffffff;
     animation: shake 0.4s;
 }
 
