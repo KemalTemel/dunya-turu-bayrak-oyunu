@@ -24,23 +24,27 @@
     user-select: none;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: var(--font-main);
     background: var(--bg-gradient);
     color: var(--light);
-    height: 100vh; /* Fallback for older browsers */
-    height: 100dvh; /* Fixes mobile address bar issue */
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
+    touch-action: none; /* Prevent pull-to-refresh and bounce on mobile */
 }
 
 #app {
     width: 100%;
     max-width: 500px;
-    height: 100vh;
-    height: 100dvh;
+    height: 100%;
     position: relative;
     overflow: hidden;
     background: url('https://www.transparenttextures.com/patterns/world-map.png');
@@ -113,49 +117,134 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Loading Screen */
+/* Premium Loading Screen */
 #loading-screen {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
     background: var(--bg-gradient);
     z-index: 100;
 }
 
-.loader-content h1 {
-    font-size: 2.5rem;
+.premium-loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.globe-spinner {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.globe-spinner .ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid transparent;
+}
+
+.globe-spinner .ring:nth-child(1) {
+    border-top-color: var(--primary);
+    animation: spin 1.5s linear infinite;
+}
+
+.globe-spinner .ring:nth-child(2) {
+    border-right-color: var(--success);
+    animation: spin 2s linear infinite reverse;
+    width: 85%;
+    height: 85%;
+}
+
+.globe-spinner .ring:nth-child(3) {
+    border-bottom-color: var(--accent);
+    animation: spin 2.5s linear infinite;
+    width: 70%;
+    height: 70%;
+}
+
+.globe-core {
+    font-size: 3.5rem;
+    animation: pulseGlobe 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(46, 204, 113, 0.5));
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseGlobe {
+    0% { transform: scale(0.95); opacity: 0.8; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.premium-loader-content h1 {
+    font-size: 3rem;
     font-weight: 800;
-    letter-spacing: 4px;
-    margin: 20px 0;
-    background: linear-gradient(45deg, #fff, var(--primary));
+    letter-spacing: 6px;
+    margin: 0;
+    background: linear-gradient(90deg, #fff, var(--success), var(--primary), #fff);
+    background-size: 300% 100%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: gradientShift 3s ease infinite;
+    text-shadow: 0 0 20px rgba(46, 204, 113, 0.2);
 }
 
-.flag-icon-anim {
-    font-size: 4rem;
-    animation: rotate 4s infinite linear;
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+.loading-subtitle {
+    color: var(--success);
+    font-weight: 600;
+    letter-spacing: 3px;
+    font-size: 0.9rem;
+    animation: blink 1.5s infinite;
 }
 
-.progress-bar-container {
-    width: 200px;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-    margin-top: 20px;
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.cyber-progress {
+    width: 250px;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    border-radius: 4px;
     overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
 }
 
-.progress-bar {
+.cyber-bar {
     width: 0%;
     height: 100%;
-    background: var(--primary);
-    transition: width 0.3s ease;
+    background: linear-gradient(90deg, var(--primary), var(--success));
+    box-shadow: 0 0 10px var(--success);
+    transition: width 0.3s ease-out;
+    position: relative;
+}
+
+.cyber-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    filter: blur(5px);
 }
 
 /* Main Menu */
@@ -309,6 +398,16 @@ body {
     height: 100%;
     background: var(--primary);
     transition: width 0.1s linear;
+}
+
+.game-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 10px 0;
 }
 
 .flag-container {
