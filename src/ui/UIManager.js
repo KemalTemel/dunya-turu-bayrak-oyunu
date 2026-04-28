@@ -76,6 +76,13 @@ class UIManager {
             this.showScreen('main-menu');
         });
 
+        document.getElementById('btn-back-game').addEventListener('click', () => {
+            audioManager.playClick();
+            game.stopTimer();
+            game.isGameOver = true;
+            this.showScreen('main-menu');
+        });
+
         document.querySelectorAll('.btn-play-region').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 if (btn.disabled) return;
@@ -377,6 +384,12 @@ class UIManager {
                     high_score: progression.highScore,
                     gold: progression.gold
                 }).catch(e => console.error("Cloud sync error:", e));
+
+                // Auto-save high score if it's a new record
+                if (isNewRecord) {
+                    supabaseService.saveScore(progression.playerName, progression.score, localization.currentLang)
+                        .catch(e => console.error("Auto-save score error:", e));
+                }
             }
 
             this.overlay.classList.remove('hidden');
@@ -386,36 +399,19 @@ class UIManager {
                     <h2>${isNewRecord ? '🎉 YENİ REKOR! 🎉' : localization.translate('Game Over')}</h2>
                     <p>${localization.translate('Score')}: ${progression.score}</p>
                     
-                    ${isNewRecord && !progression.playerName ? 
-                        `<input type="text" id="player-name" placeholder="Adını yaz..." class="typing-input" style="margin-bottom:10px;">` 
-                        : ''}
-                    
                     <div class="badges-row">
                         ${progression.badges.map(b => `<span class="badge-icon" title="${b}">🏅</span>`).join('')}
                     </div>
                     <div style="display:flex; flex-direction:column; gap:10px;">
-                        <button class="btn-primary" id="btn-restart">${localization.translate('Retry')}</button>
-                        ${isNewRecord ? `<button class="btn-secondary" id="btn-save-online">🌐 SKORU KAYDET</button>` : ''}
+                        <button class="btn-primary" id="btn-restart">Oyunu Bitir ve Tekrar Oyna</button>
                         <button class="btn-secondary" id="btn-ad-life">📺 +1 Can (Reklam)</button>
                         <button class="btn-secondary" id="btn-gold-life">💰 +1 Can (100 Altın)</button>
-                        <button class="btn-secondary" id="btn-home">${localization.translate('Main Menu')}</button>
+                        <button class="btn-secondary" id="btn-home">Sadece Oyunu Bitir</button>
                     </div>
                 </div>
             `;
 
             // Bind Events Safely
-            const btnSave = document.getElementById('btn-save-online');
-            if (btnSave) {
-                btnSave.onclick = async () => {
-                    const nameInput = document.getElementById('player-name');
-                    const name = progression.playerName || (nameInput ? nameInput.value : 'Anonim');
-                    btnSave.textContent = 'Kaydediliyor...';
-                    btnSave.disabled = true;
-                    await supabaseService.saveScore(name, progression.score, 'tr');
-                    btnSave.textContent = '✅ KAYDEDİLDİ';
-                };
-            }
-
             const btnRestart = document.getElementById('btn-restart');
             if (btnRestart) {
                 btnRestart.onclick = () => {
