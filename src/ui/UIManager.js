@@ -76,6 +76,18 @@ class UIManager {
             this.showScreen('main-menu');
         });
 
+        document.querySelectorAll('.btn-play-region').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (btn.disabled) return;
+                audioManager.playClick();
+                const region = btn.closest('.region-card').dataset.region;
+                this.showScreen('game-screen');
+                game.start('world-tour', region);
+                this.updateHUD();
+                this.renderQuestion(game.nextQuestion());
+            });
+        });
+
         document.getElementById('btn-settings').addEventListener('click', () => {
             audioManager.playClick();
             this.showOverlay('tpl-settings');

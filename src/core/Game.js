@@ -18,8 +18,9 @@ class Game {
         this.opponentInterval = null;
     }
 
-    start(mode = 'classic') {
+    start(mode = 'classic', region = null) {
         this.currentMode = mode;
+        this.currentRegion = region;
         this.isGameOver = false;
         this.usedCountries = [];
         this.opponentScore = 0;
@@ -37,9 +38,18 @@ class Game {
 
         // Check for Boss Level
         this.isBossLevel = progression.level > 0 && progression.level % 10 === 0;
-        const available = countries.filter(c => !this.usedCountries.includes(c.code));
+        let available = countries.filter(c => !this.usedCountries.includes(c.code));
+        
+        if (this.currentMode === 'world-tour' && this.currentRegion) {
+            available = available.filter(c => c.region.includes(this.currentRegion));
+        }
+
         if (available.length === 0) {
             this.usedCountries = []; // Reset if all countries used
+            available = countries;
+            if (this.currentMode === 'world-tour' && this.currentRegion) {
+                available = available.filter(c => c.region.includes(this.currentRegion));
+            }
         }
         
         const target = available[Math.floor(Math.random() * available.length)];
