@@ -10,7 +10,10 @@
     --glass-border: rgba(255, 255, 255, 0.2);
     --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     --font-main: 'Outfit', sans-serif;
-    --bg-gradient: radial-gradient(circle at top right, #2c3e50, #000000);
+    --bg-gradient: 
+        repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(46, 204, 113, 0.08) 20px, rgba(46, 204, 113, 0.08) 40px),
+        repeating-linear-gradient(-45deg, transparent, transparent 20px, rgba(46, 204, 113, 0.08) 20px, rgba(46, 204, 113, 0.08) 40px),
+        radial-gradient(circle at center, #0a2e13, #000000);
 }
 
 * {
