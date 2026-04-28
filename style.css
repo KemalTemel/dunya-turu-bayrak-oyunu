@@ -28,7 +28,8 @@ body {
     font-family: var(--font-main);
     background: var(--bg-gradient);
     color: var(--light);
-    height: 100vh;
+    height: 100vh; /* Fallback for older browsers */
+    height: 100dvh; /* Fixes mobile address bar issue */
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -39,6 +40,7 @@ body {
     width: 100%;
     max-width: 500px;
     height: 100vh;
+    height: 100dvh;
     position: relative;
     overflow: hidden;
     background: url('https://www.transparenttextures.com/patterns/world-map.png');
@@ -388,6 +390,7 @@ body {
 .game-footer {
     margin-top: auto;
     padding-top: 20px;
+    padding-bottom: 20px; /* Push hints up slightly for mobile */
 }
 
 .hints-container {
