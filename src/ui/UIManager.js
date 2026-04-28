@@ -87,6 +87,7 @@ class UIManager {
             btn.addEventListener('click', (e) => {
                 if (btn.disabled) return;
                 audioManager.playClick();
+                audioManager.startMusic();
                 const region = btn.closest('.region-card').dataset.region;
                 this.showScreen('game-screen');
                 game.start('world-tour', region);
@@ -149,6 +150,9 @@ class UIManager {
     async handleLogin() {
         const username = this.loginInput.value.trim();
         if (!username) return;
+
+        audioManager.playClick();
+        audioManager.startMusic();
 
         this.btnLogin.disabled = true;
         this.loginStatus.textContent = localization.translate('Giriş yapılıyor...');
@@ -223,12 +227,21 @@ class UIManager {
         if (closeBtn) closeBtn.onclick = () => this.overlay.classList.add('hidden');
 
         // Bind settings toggles if applicable
-        const soundToggle = this.overlay.querySelector('#toggle-sound');
-        if (soundToggle) {
-            soundToggle.textContent = audioManager.enabled ? 'AÇIK' : 'KAPALI';
-            soundToggle.onclick = () => {
-                const enabled = audioManager.toggle();
-                soundToggle.textContent = enabled ? 'AÇIK' : 'KAPALI';
+        const sfxToggle = this.overlay.querySelector('#toggle-sfx');
+        if (sfxToggle) {
+            sfxToggle.textContent = audioManager.sfxEnabled ? 'AÇIK' : 'KAPALI';
+            sfxToggle.onclick = () => {
+                const enabled = audioManager.toggleSfx();
+                sfxToggle.textContent = enabled ? 'AÇIK' : 'KAPALI';
+            };
+        }
+
+        const musicToggle = this.overlay.querySelector('#toggle-music');
+        if (musicToggle) {
+            musicToggle.textContent = audioManager.musicEnabled ? 'AÇIK' : 'KAPALI';
+            musicToggle.onclick = () => {
+                const enabled = audioManager.toggleMusic();
+                musicToggle.textContent = enabled ? 'AÇIK' : 'KAPALI';
             };
         }
 

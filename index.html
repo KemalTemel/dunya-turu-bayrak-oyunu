@@ -189,8 +189,12 @@
             <div class="modal">
                 <h2>AYARLAR</h2>
                 <div class="setting-item">
-                    <span data-i18n="Sound">Ses</span>
-                    <button class="toggle-btn" id="toggle-sound">AÇIK</button>
+                    <span>Ses Efektleri</span>
+                    <button class="toggle-btn" id="toggle-sfx">AÇIK</button>
+                </div>
+                <div class="setting-item">
+                    <span>Müzik</span>
+                    <button class="toggle-btn" id="toggle-music">AÇIK</button>
                 </div>
                 <div class="setting-item">
                     <span data-i18n="Language">Dil</span>
@@ -212,8 +216,8 @@
         </template>
     </div>
 
-    <!-- Background Music (Dummy for now) -->
-    <audio id="bg-music" loop></audio>
+    <!-- Background Music -->
+    <audio id="bg-music" loop src="https://upload.wikimedia.org/wikipedia/commons/1/15/Beethoven_-_F%C3%BCr_Elise.ogg"></audio>
 
     <!-- Scripts -->
     <script type="module" src="src/main.js"></script>

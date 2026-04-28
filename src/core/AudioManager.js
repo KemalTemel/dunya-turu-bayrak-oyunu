@@ -1,67 +1,77 @@
 class AudioManager {
     constructor() {
         this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-        this.enabled = true;
-        this.musicEnabled = true;
-        this.musicInterval = null;
+        
+        // Load settings from localStorage or default to true
+        this.sfxEnabled = localStorage.getItem('sfxEnabled') !== 'false';
+        this.musicEnabled = localStorage.getItem('musicEnabled') !== 'false';
+        
+        this.bgMusic = document.getElementById('bg-music');
+        if (this.bgMusic) {
+            this.bgMusic.volume = 0.3; // Soft background music
+        }
     }
 
-    toggle() {
-        this.enabled = !this.enabled;
-        return this.enabled;
+    toggleSfx() {
+        this.sfxEnabled = !this.sfxEnabled;
+        localStorage.setItem('sfxEnabled', this.sfxEnabled);
+        return this.sfxEnabled;
     }
 
     toggleMusic() {
         this.musicEnabled = !this.musicEnabled;
-        if (this.musicEnabled) this.startMusic();
-        else this.stopMusic();
+        localStorage.setItem('musicEnabled', this.musicEnabled);
+        if (this.musicEnabled) {
+            this.startMusic();
+        } else {
+            this.stopMusic();
+        }
         return this.musicEnabled;
     }
 
     playCorrect() {
-        if (!this.enabled) return;
-        this.beep(660, 0.1, 'sine');
-        setTimeout(() => this.beep(880, 0.1, 'sine'), 100);
+        if (!this.sfxEnabled) return;
+        this.beep(523.25, 0.1, 'sine', 0.05); // Soft C5
+        setTimeout(() => this.beep(659.25, 0.15, 'sine', 0.05), 100); // Soft E5
+        setTimeout(() => this.beep(783.99, 0.2, 'sine', 0.05), 200); // Soft G5
     }
 
     playWrong() {
-        if (!this.enabled) return;
-        this.beep(220, 0.2, 'sawtooth');
+        if (!this.sfxEnabled) return;
+        this.beep(300, 0.15, 'triangle', 0.05);
+        setTimeout(() => this.beep(250, 0.3, 'triangle', 0.05), 100);
         this.vibrate();
     }
 
     playClick() {
-        if (!this.enabled) return;
-        this.beep(440, 0.05, 'triangle');
+        if (!this.sfxEnabled) return;
+        this.beep(600, 0.05, 'sine', 0.02); // Very soft subtle click
     }
 
     vibrate() {
         if (navigator.vibrate) {
-            navigator.vibrate(200);
+            navigator.vibrate(100); // Shorter vibration
         }
     }
 
     startMusic() {
-        if (!this.musicEnabled || this.musicInterval) return;
+        if (!this.musicEnabled || !this.bgMusic) return;
         
-        const melody = [440, 493.88, 523.25, 587.33]; // A4, B4, C5, D5
-        let noteIdx = 0;
-
-        this.musicInterval = setInterval(() => {
-            if (this.ctx.state === 'suspended') this.ctx.resume();
-            this.beep(melody[noteIdx], 0.4, 'triangle', 0.03);
-            noteIdx = (noteIdx + 1) % melody.length;
-        }, 800);
+        // Ensure audio context is active if we need it for future
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+        
+        // Play the audio tag
+        this.bgMusic.play().catch(e => console.log("Auto-play prevented until user interaction."));
     }
 
     stopMusic() {
-        if (this.musicInterval) {
-            clearInterval(this.musicInterval);
-            this.musicInterval = null;
+        if (this.bgMusic) {
+            this.bgMusic.pause();
         }
     }
 
     beep(freq, duration, type, volume = 0.1) {
+        if (this.ctx.state === 'suspended') this.ctx.resume();
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
 
